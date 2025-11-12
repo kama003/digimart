@@ -1,0 +1,220 @@
+name: 'User Purchases'
+description: |-
+
+  APIs for managing user purchases and downloads (requires authentication)
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/user/purchases
+    metadata:
+      custom: []
+      groupName: 'User Purchases'
+      groupDescription: |-
+
+        APIs for managing user purchases and downloads (requires authentication)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get purchased products'
+      description: 'Retrieve a paginated list of products purchased by the authenticated user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_API_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      page:
+        custom: []
+        name: page
+        description: 'Page number for pagination.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "success": true,
+            "data": [
+              {
+                "id": 1,
+                "title": "Premium Audio Pack",
+                "slug": "premium-audio-pack",
+                "description": "High-quality audio files for your projects",
+                "short_description": "Professional audio collection",
+                "product_type": "audio",
+                "price": "49.99",
+                "thumbnail_path": "products/thumbnails/audio-pack.jpg",
+                "category": {
+                  "id": 1,
+                  "name": "Audio",
+                  "slug": "audio"
+                },
+                "seller": {
+                  "id": 2,
+                  "name": "John Doe"
+                },
+                "purchased_at": "2024-01-20T14:30:00+00:00",
+                "transaction_id": 5
+              }
+            ],
+            "meta": {
+              "current_page": 1,
+              "last_page": 3,
+              "per_page": 20,
+              "total": 45
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 429
+        content: |-
+          {
+            "message": "Too Many Requests"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/user/downloads/{download_id}'
+    metadata:
+      custom: []
+      groupName: 'User Purchases'
+      groupDescription: |-
+
+        APIs for managing user purchases and downloads (requires authentication)
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Generate download link'
+      description: |-
+        Generate a new time-limited download link for a purchased product.
+        If the existing link has expired, a new one will be created.
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_API_TOKEN}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      download_id:
+        custom: []
+        name: download_id
+        description: 'The ID of the download.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      download:
+        custom: []
+        name: download
+        description: 'The download ID.'
+        required: true
+        example: 123
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      download_id: 16
+      download: 123
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "success": true,
+            "data": {
+              "download_url": "https://s3.amazonaws.com/bucket/products/file.zip?signature=...",
+              "expires_at": "2024-01-21T14:30:00+00:00",
+              "product": {
+                "id": 1,
+                "title": "Premium Audio Pack",
+                "slug": "premium-audio-pack"
+              }
+            },
+            "message": "Download link generated successfully."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 403
+        content: |-
+          {
+            "success": false,
+            "message": "Unauthorized access to this download."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Download]."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 429
+        content: |-
+          {
+            "message": "Too Many Requests"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

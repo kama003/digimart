@@ -1,0 +1,249 @@
+name: Products
+description: |-
+
+  APIs for browsing and searching digital products
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/products
+    metadata:
+      custom: []
+      groupName: Products
+      groupDescription: |-
+
+        APIs for browsing and searching digital products
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List products'
+      description: 'Get a paginated list of approved and active products with optional filters.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters:
+      category:
+        custom: []
+        name: category
+        description: 'Filter by category slug.'
+        required: false
+        example: audio
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      type:
+        custom: []
+        name: type
+        description: 'Filter by product type (audio, video, 3d, template, graphic).'
+        required: false
+        example: audio
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      min_price:
+        custom: []
+        name: min_price
+        description: 'Filter by minimum price.'
+        required: false
+        example: 10.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      max_price:
+        custom: []
+        name: max_price
+        description: 'Filter by maximum price.'
+        required: false
+        example: 100.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      search:
+        custom: []
+        name: search
+        description: 'Search in title, description, and short description.'
+        required: false
+        example: music
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      page:
+        custom: []
+        name: page
+        description: 'Page number for pagination.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanQueryParameters:
+      category: audio
+      type: audio
+      min_price: 10.0
+      max_price: 100.0
+      search: music
+      page: 1
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": 1,
+                "title": "Premium Audio Pack",
+                "slug": "premium-audio-pack",
+                "description": "High-quality audio files for your projects",
+                "short_description": "Professional audio collection",
+                "product_type": "audio",
+                "price": "49.99",
+                "license_type": "Commercial",
+                "thumbnail_path": "products/thumbnails/audio-pack.jpg",
+                "downloads_count": 150,
+                "category": {
+                  "id": 1,
+                  "name": "Audio",
+                  "slug": "audio"
+                },
+                "seller": {
+                  "id": 2,
+                  "name": "John Doe"
+                },
+                "created_at": "2024-01-15T10:30:00.000000Z"
+              }
+            ],
+            "links": {
+              "first": "http://localhost/api/v1/products?page=1",
+              "last": "http://localhost/api/v1/products?page=5",
+              "prev": null,
+              "next": "http://localhost/api/v1/products?page=2"
+            },
+            "meta": {
+              "current_page": 1,
+              "from": 1,
+              "last_page": 5,
+              "per_page": 20,
+              "to": 20,
+              "total": 95
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 429
+        content: |-
+          {
+            "message": "Too Many Requests"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/products/{slug}'
+    metadata:
+      custom: []
+      groupName: Products
+      groupDescription: |-
+
+        APIs for browsing and searching digital products
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get product details'
+      description: 'Retrieve detailed information about a specific product by its slug.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      slug:
+        custom: []
+        name: slug
+        description: 'The product slug.'
+        required: true
+        example: premium-audio-pack
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      slug: premium-audio-pack
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": {
+              "id": 1,
+              "title": "Premium Audio Pack",
+              "slug": "premium-audio-pack",
+              "description": "High-quality audio files for your projects. Includes 50+ tracks in various genres.",
+              "short_description": "Professional audio collection",
+              "product_type": "audio",
+              "price": "49.99",
+              "license_type": "Commercial",
+              "thumbnail_path": "products/thumbnails/audio-pack.jpg",
+              "downloads_count": 150,
+              "category": {
+                "id": 1,
+                "name": "Audio",
+                "slug": "audio"
+              },
+              "seller": {
+                "id": 2,
+                "name": "John Doe"
+              },
+              "created_at": "2024-01-15T10:30:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No query results for model [App\\Models\\Product]."
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

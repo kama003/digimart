@@ -1,0 +1,81 @@
+name: Categories
+description: |-
+
+  APIs for browsing product categories
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/categories
+    metadata:
+      custom: []
+      groupName: Categories
+      groupDescription: |-
+
+        APIs for browsing product categories
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List categories'
+      description: 'Get a list of all product categories ordered by display order and name.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "data": [
+              {
+                "id": 1,
+                "name": "Audio",
+                "slug": "audio",
+                "description": "Audio files, music tracks, and sound effects",
+                "icon": "musical-note",
+                "order": 1
+              },
+              {
+                "id": 2,
+                "name": "Video",
+                "slug": "video",
+                "description": "Video templates, stock footage, and motion graphics",
+                "icon": "film",
+                "order": 2
+              },
+              {
+                "id": 3,
+                "name": "3D Models",
+                "slug": "3d-models",
+                "description": "3D models, textures, and assets",
+                "icon": "cube",
+                "order": 3
+              }
+            ]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 429
+        content: |-
+          {
+            "message": "Too Many Requests"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
