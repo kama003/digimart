@@ -12,22 +12,11 @@ return [
     'title' => config('app.name') . ' API Documentation',
 
     // A short description of your API. Will be included in the docs webpage, Postman collection and OpenAPI spec.
-    'description' => 'REST API for accessing digital marketplace products, categories, and user purchases.',
+    'description' => '',
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
     'intro_text' => <<<INTRO
-        Welcome to the Digital Marketplace API documentation. This API allows you to browse products, search by category and filters, and manage your purchases.
-
-        ## Base URL
-        All API requests should be made to: `{base_url}/api/v1`
-
-        ## Rate Limiting
-        The API implements rate limiting to ensure fair usage:
-        - **Public endpoints**: 60 requests per minute per IP address
-        - **Authenticated endpoints**: 120 requests per minute per user
-        - **Download generation**: 10 requests per hour per user
-
-        When you exceed the rate limit, you'll receive a `429 Too Many Requests` response with a `Retry-After` header indicating when you can retry.
+        This documentation aims to provide all the information you need to work with our API.
 
         <aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
         You can switch the language used with the tabs at the top right (or from the nav menu at the top left on mobile).</aside>
@@ -114,7 +103,7 @@ return [
     // How is your API authenticated? This information will be used in the displayed docs, generated examples and response calls.
     'auth' => [
         // Set this to true if ANY endpoints in your API use authentication.
-        'enabled' => true,
+        'enabled' => false,
 
         // Set this to true if your API should be authenticated by default. If so, you must also set `enabled` (above) to true.
         // You can then use @unauthenticated or @authenticated on individual endpoints to change their status from the default.
@@ -124,7 +113,7 @@ return [
         'in' => AuthIn::BEARER->value,
 
         // The name of the auth parameter (e.g. token, key, apiKey) or header (e.g. Authorization, Api-Key).
-        'name' => 'Authorization',
+        'name' => 'key',
 
         // The value of the parameter to be used by Scribe to authenticate response calls.
         // This will NOT be included in the generated documentation. If empty, Scribe will use a random value.
@@ -132,30 +121,10 @@ return [
 
         // Placeholder your users will see for the auth parameter in the example requests.
         // Set this to null if you want Scribe to use a random value as placeholder instead.
-        'placeholder' => '{YOUR_API_TOKEN}',
+        'placeholder' => '{YOUR_AUTH_KEY}',
 
         // Any extra authentication-related info for your users. Markdown and HTML are supported.
-        'extra_info' => <<<AUTH
-            ## Authentication
-
-            This API uses **Laravel Sanctum** for authentication. To access authenticated endpoints, you need to:
-
-            1. Log in to your account at the marketplace
-            2. Navigate to **Settings > API Tokens**
-            3. Click **Create New Token** and give it a name
-            4. Copy the generated token (it will only be shown once)
-            5. Include the token in the `Authorization` header of your requests as a Bearer token
-
-            ### Example Request Header
-            ```
-            Authorization: Bearer YOUR_API_TOKEN_HERE
-            ```
-
-            ### Token Management
-            - Tokens do not expire automatically but can be revoked at any time from your settings
-            - You can create multiple tokens for different applications
-            - Keep your tokens secure and never share them publicly
-        AUTH,
+        'extra_info' => 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.',
     ],
 
     // Example requests for each endpoint will be shown in each of these languages.
@@ -165,8 +134,6 @@ return [
     'example_languages' => [
         'bash',
         'javascript',
-        'php',
-        'python',
     ],
 
     // Generate a Postman collection (v2.1.0) in addition to HTML docs.
