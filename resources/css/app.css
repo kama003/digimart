@@ -11,6 +11,7 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
+    /* Dark Theme Palette */
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
     --color-zinc-200: #e5e5e5;
@@ -23,51 +24,67 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
-    --color-accent-foreground: var(--color-white);
+    /* Custom Brand Colors */
+    --color-brand-black: #0D0D0D;
+    --color-brand-surface: #1A1A1A;
+    --color-brand-surface-highlight: #262626;
+    --color-brand-blue: #007AFF;
+    --color-brand-blue-hover: #0062cc;
+    --color-brand-purple: #7C3AED;
+
+    --color-accent: var(--color-brand-blue);
+    --color-accent-content: #ffffff;
+    --color-accent-foreground: #ffffff;
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        --color-accent: var(--color-brand-blue);
+        --color-accent-content: #ffffff;
+        --color-accent-foreground: #ffffff;
     }
 }
 
 @layer base {
+    html {
+        @apply bg-brand-black text-white antialiased;
+    }
+
+    body {
+        @apply bg-brand-black text-zinc-300;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        @apply text-white font-bold tracking-tight;
+    }
 
     *,
     ::after,
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
+        border-color: var(--color-zinc-800, currentColor);
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
-    @apply grid gap-2;
-}
-
-[data-flux-label] {
-    @apply  !mb-0 !leading-tight;
-}
-
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
-    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
-}
-
-/* \[:where(&)\]:size-4 {
-    @apply size-4;
-} */
-
-/* Accessibility Enhancements */
 @layer utilities {
-    /* Skip to main content link - hidden by default, visible on focus */
+    .glass {
+        @apply bg-black/50 backdrop-blur-md border-b border-white/10;
+    }
+    
+    .card-gradient {
+        background: linear-gradient(145deg, rgba(26,26,26,1) 0%, rgba(13,13,13,1) 100%);
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400;
+    }
+    
+    .text-gradient-blue {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-brand-blue to-brand-purple;
+    }
+
+    /* Accessibility Enhancements */
     .sr-only {
         position: absolute;
         width: 1px;
@@ -91,35 +108,32 @@ select:focus[data-flux-control] {
         white-space: normal;
     }
 
-    /* Enhanced focus indicators for better visibility */
     a:focus-visible,
     button:focus-visible,
     input:focus-visible,
     textarea:focus-visible,
     select:focus-visible,
     [tabindex]:focus-visible {
-        outline: 2px solid var(--color-green-500, #22c55e);
+        outline: 2px solid var(--color-brand-blue);
         outline-offset: 2px;
         border-radius: 0.25rem;
     }
 
-    /* Ensure focus indicators are visible in dark mode */
-    .dark a:focus-visible,
-    .dark button:focus-visible,
-    .dark input:focus-visible,
-    .dark textarea:focus-visible,
-    .dark select:focus-visible,
-    .dark [tabindex]:focus-visible {
-        outline-color: var(--color-green-400, #4ade80);
-    }
-
-    /* Remove default focus outline when using custom focus styles */
     *:focus {
         outline: none;
     }
+}
 
-    *:focus-visible {
-        outline: 2px solid var(--color-green-500, #22c55e);
-        outline-offset: 2px;
-    }
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply  !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-brand-black;
 }

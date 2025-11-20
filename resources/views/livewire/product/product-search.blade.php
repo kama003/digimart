@@ -1,9 +1,20 @@
-<div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="min-h-screen bg-brand-black pt-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Page Header -->
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Search Products</h1>
-            <p class="mt-2 text-gray-600 dark:text-gray-400">Find the perfect digital asset for your project</p>
+        <div class="mb-10 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">@if($currentCategory)
+                    <span class="text-gradient-blue"> {{ $currentCategory->name }} </span>
+                @else
+                    Search <span class="text-gradient-blue">Products</span>
+                @endif 
+            </h1>
+            <p class="text-lg text-zinc-400 max-w-2xl mx-auto">
+                @if($currentCategory && $currentCategory->description)
+                    {{ $currentCategory->description }}
+                @else
+                    Find the perfect digital asset for your project from our curated collection.
+                @endif
+            </p>
         </div>
 
         <!-- Screen reader announcement for search results -->
@@ -16,48 +27,57 @@
         </div>
 
         <!-- Search and Filter Form -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 sm:p-6 mb-6 sm:mb-8" role="search" aria-label="Product search filters">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div class="bg-brand-surface rounded-2xl p-6 mb-10 border border-white/5 shadow-lg" role="search" aria-label="Product search filters">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
                 <!-- Keyword Search -->
                 <div class="sm:col-span-2 lg:col-span-2">
-                    <label for="keyword" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="keyword" class="block text-sm font-medium text-zinc-300 mb-2">
                         Search
                     </label>
-                    <input 
-                        type="text" 
-                        id="keyword"
-                        wire:model.live.debounce.300ms="keyword"
-                        placeholder="Search by title or description..."
-                        class="p-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                    >
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            id="keyword"
+                            wire:model.live.debounce.300ms="keyword"
+                            placeholder="Search by title or description..."
+                            class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-all"
+                        >
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <svg class="w-5 h-5 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Category Filter -->
                 <div>
-                    <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="category" class="block text-sm font-medium text-zinc-300 mb-2">
                         Category
                     </label>
                     <select 
                         id="category"
-                        wire:model.live="category_id"
-                        class="p-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        wire:change="$dispatch('category-changed', { slug: $event.target.selectedOptions[0].dataset.slug })"
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-all appearance-none"
                     >
-                        <option value="">All Categories</option>
+                        <option value="" data-slug="">All Categories</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" data-slug="{{ $category->slug }}" {{ $category_id == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
 
                 <!-- Product Type Filter -->
                 <div>
-                    <label for="product_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="product_type" class="block text-sm font-medium text-zinc-300 mb-2">
                         Type
                     </label>
                     <select 
                         id="product_type"
                         wire:model.live="product_type"
-                        class="p-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-all appearance-none"
                     >
                         <option value="">All Types</option>
                         <option value="audio">Audio</option>
@@ -70,17 +90,17 @@
 
                 <!-- Price Range -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label class="block text-sm font-medium text-zinc-300 mb-2">
                         Price Range
                     </label>
-                    <div class="flex gap-2">
+                    <div class="flex gap-3">
                         <input 
                             type="number" 
                             wire:model.live.debounce.300ms="min_price"
                             placeholder="Min"
                             min="0"
                             step="0.01"
-                            class="p-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                            class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-all text-sm"
                         >
                         <input 
                             type="number" 
@@ -88,19 +108,19 @@
                             placeholder="Max"
                             min="0"
                             step="0.01"
-                            class="p-2 w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
+                            class="w-full bg-black/30 border border-white/10 rounded-xl px-3 py-3 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent transition-all text-sm"
                         >
                     </div>
                 </div>
             </div>
 
             <!-- Active Filters and Reset Button -->
-            <div class="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+            <div class="mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t border-white/5 pt-4">
                 <div class="flex flex-wrap gap-2">
                     @if($keyword)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-brand-blue/10 text-brand-blue border border-brand-blue/20">
                             Search: "{{ Str::limit($keyword, 20) }}"
-                            <button wire:click="$set('keyword', '')" class="ml-2 hover:text-indigo-600" aria-label="Clear search">
+                            <button wire:click="$set('keyword', '')" class="ml-2 hover:text-white transition-colors" aria-label="Clear search">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
@@ -108,9 +128,9 @@
                         </span>
                     @endif
                     @if($category_id)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-brand-blue/10 text-brand-blue border border-brand-blue/20">
                             Category: {{ $categories->firstWhere('id', $category_id)?->name }}
-                            <button wire:click="$set('category_id', '')" class="ml-2 hover:text-indigo-600" aria-label="Clear category filter">
+                            <button wire:click="$set('category_id', '')" class="ml-2 hover:text-white transition-colors" aria-label="Clear category filter">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
@@ -118,9 +138,9 @@
                         </span>
                     @endif
                     @if($product_type)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-brand-blue/10 text-brand-blue border border-brand-blue/20">
                             Type: {{ ucfirst($product_type) }}
-                            <button wire:click="$set('product_type', '')" class="ml-2 hover:text-indigo-600" aria-label="Clear type filter">
+                            <button wire:click="$set('product_type', '')" class="ml-2 hover:text-white transition-colors" aria-label="Clear type filter">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
@@ -128,9 +148,9 @@
                         </span>
                     @endif
                     @if($min_price || $max_price)
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm bg-brand-blue/10 text-brand-blue border border-brand-blue/20">
                             Price: ${{ $min_price ?: '0' }} - ${{ $max_price ?: '∞' }}
-                            <button wire:click="$set('min_price', ''); $set('max_price', '')" class="ml-2 hover:text-indigo-600" aria-label="Clear price filter">
+                            <button wire:click="$set('min_price', ''); $set('max_price', '')" class="ml-2 hover:text-white transition-colors" aria-label="Clear price filter">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
                                 </svg>
@@ -142,8 +162,11 @@
                 @if($keyword || $category_id || $product_type || $min_price || $max_price)
                     <button 
                         wire:click="resetFilters"
-                        class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 font-medium self-start sm:self-auto"
+                        class="text-sm text-zinc-400 hover:text-white transition-colors font-medium self-start sm:self-auto flex items-center gap-2"
                     >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
                         Clear All Filters
                     </button>
                 @endif
@@ -151,49 +174,49 @@
         </div>
 
         <!-- Loading Indicator -->
-        <div wire:loading class="mb-4">
-            <div class="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4">
-                <div class="flex items-center">
-                    <svg class="animate-spin h-5 w-5 text-indigo-600 dark:text-indigo-400 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <span class="text-indigo-600 dark:text-indigo-400 font-medium">Searching products...</span>
-                </div>
+        <div wire:loading class="mb-8 w-full">
+            <div class="bg-brand-blue/10 border border-brand-blue/20 rounded-xl p-4 flex items-center justify-center">
+                <svg class="animate-spin h-5 w-5 text-brand-blue mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span class="text-brand-blue font-medium">Searching products...</span>
             </div>
         </div>
 
         <!-- Results Count -->
-        <div class="mb-4">
-            <p class="text-sm text-gray-600 dark:text-gray-400">
-                Found <span class="font-semibold text-gray-900 dark:text-white">{{ $products->total() }}</span> products
+        <div class="mb-6">
+            <p class="text-sm text-zinc-400">
+                Found <span class="font-semibold text-white">{{ $products->total() }}</span> products
             </p>
         </div>
 
         <!-- Products Grid -->
         @if($products->count() > 0)
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-12">
                 @foreach($products as $product)
                     <livewire:product.product-card :product="$product" :key="'product-'.$product->id" />
                 @endforeach
             </div>
 
             <!-- Pagination -->
-            <div class="mt-8">
+            <div class="mt-12">
                 {{ $products->links() }}
             </div>
         @else
             <!-- No Results -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-12 text-center">
-                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <h3 class="mt-4 text-lg font-medium text-gray-900 dark:text-white">No products found</h3>
-                <p class="mt-2 text-gray-600 dark:text-gray-400">Try adjusting your search filters to find what you're looking for.</p>
+            <div class="bg-brand-surface rounded-2xl border border-white/5 p-16 text-center">
+                <div class="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="h-10 w-10 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-white mb-2">No products found</h3>
+                <p class="text-zinc-400 mb-8 max-w-md mx-auto">We couldn't find any products matching your search criteria. Try adjusting your filters or search terms.</p>
                 @if($keyword || $category_id || $product_type || $min_price || $max_price)
                     <button 
                         wire:click="resetFilters"
-                        class="mt-4 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                        class="inline-flex items-center px-6 py-3 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-brand-blue hover:bg-brand-blue-hover focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue transition-all"
                     >
                         Clear All Filters
                     </button>

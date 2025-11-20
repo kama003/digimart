@@ -26,9 +26,18 @@
                         <flux:navlist.item icon="chart-bar" :href="route('admin.dashboard')" :current="request()->routeIs('admin.dashboard')" wire:navigate>{{ __('Admin Dashboard') }}</flux:navlist.item>
                         <flux:navlist.item icon="users" :href="route('admin.users')" :current="request()->routeIs('admin.users')" wire:navigate>{{ __('User Management') }}</flux:navlist.item>
                         <flux:navlist.item icon="cube" :href="route('admin.products')" :current="request()->routeIs('admin.products*')" wire:navigate>{{ __('Product Moderation') }}</flux:navlist.item>
+                        <flux:navlist.item icon="chat-bubble-left-right" :href="route('admin.reviews')" :current="request()->routeIs('admin.reviews')" wire:navigate>{{ __('Reviews') }}</flux:navlist.item>
                         <flux:navlist.item icon="document-text" :href="route('admin.seller-requests')" :current="request()->routeIs('admin.seller-requests')" wire:navigate>{{ __('Seller Requests') }}</flux:navlist.item>
                         <flux:navlist.item icon="credit-card" :href="route('admin.transactions')" :current="request()->routeIs('admin.transactions')" wire:navigate>{{ __('Transactions') }}</flux:navlist.item>
                         <flux:navlist.item icon="currency-dollar" :href="route('admin.withdrawals')" :current="request()->routeIs('admin.withdrawals')" wire:navigate>{{ __('Withdrawals') }}</flux:navlist.item>
+                    </flux:navlist.group>
+
+                    <flux:navlist.group :heading="__('Content')" class="grid">
+                        <flux:navlist.item icon="document-text" :href="route('admin.blog')" :current="request()->routeIs('admin.blog')" wire:navigate>{{ __('Blog Moderation') }}</flux:navlist.item>
+                    </flux:navlist.group>
+
+                    <flux:navlist.group :heading="__('Backend Logic')" class="grid">
+                        <flux:navlist.item icon="tag" :href="route('admin.categories')" :current="request()->routeIs('admin.categories')" wire:navigate>{{ __('Categories') }}</flux:navlist.item>
                     </flux:navlist.group>
                 @endif
 
@@ -36,6 +45,7 @@
                     <flux:navlist.group :heading="__('Seller')" class="grid">
                         <flux:navlist.item icon="chart-bar" :href="route('seller.dashboard')" :current="request()->routeIs('seller.dashboard')" wire:navigate>{{ __('Seller Dashboard') }}</flux:navlist.item>
                         <flux:navlist.item icon="cube" :href="route('seller.products.index')" :current="request()->routeIs('seller.products*')" wire:navigate>{{ __('My Products') }}</flux:navlist.item>
+                        <flux:navlist.item icon="document-text" :href="route('seller.blog.index')" :current="request()->routeIs('seller.blog*')" wire:navigate>{{ __('My Blog Posts') }}</flux:navlist.item>
                         <flux:navlist.item icon="currency-dollar" :href="route('seller.withdrawals')" :current="request()->routeIs('seller.withdrawals*')" wire:navigate>{{ __('Withdrawals') }}</flux:navlist.item>
                         <flux:navlist.item icon="chart-pie" :href="route('seller.analytics')" :current="request()->routeIs('seller.analytics')" wire:navigate>{{ __('Analytics') }}</flux:navlist.item>
                     </flux:navlist.group>

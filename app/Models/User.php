@@ -142,4 +142,33 @@ class User extends Authenticatable // implements MustVerifyEmail // Temporarily 
     {
         return $this->hasMany(SellerRoleRequest::class);
     }
+
+    /**
+     * Get the reviews written by the user
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Check if user has purchased a product
+     */
+    public function hasPurchased(Product $product): bool
+    {
+        return $this->transactions()
+            ->where('status', 'completed')
+            ->whereHas('transactionItems', function ($query) use ($product) {
+                $query->where('product_id', $product->id);
+            })
+            ->exists();
+    }
+
+    /**
+     * Check if user has reviewed a product
+     */
+    public function hasReviewed(Product $product): bool
+    {
+        return $this->reviews()->where('product_id', $product->id)->exists();
+    }
 }

@@ -8,9 +8,25 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Static pages
+Route::get('/about', App\Livewire\Pages\AboutPage::class)->name('about');
+Route::get('/contact', App\Livewire\Pages\ContactPage::class)->name('contact');
+Route::get('/terms', App\Livewire\Pages\TermsPage::class)->name('terms');
+Route::get('/privacy', App\Livewire\Pages\PrivacyPage::class)->name('privacy');
+
+// Support pages
+Route::get('/help', App\Livewire\Pages\HelpCenterPage::class)->name('help-center');
+Route::get('/faq', App\Livewire\Pages\FaqPage::class)->name('faq');
+Route::get('/seller-guide', App\Livewire\Pages\SellerGuidePage::class)->name('seller-guide');
+
 // Product routes
 Route::get('/search', App\Livewire\Product\ProductSearch::class)->name('products.search');
+Route::get('/category/{slug}', App\Livewire\Product\ProductSearch::class)->name('category.show');
 Route::get('/product/{slug}', App\Livewire\Product\ProductDetail::class)->name('product.show');
+
+// Blog routes
+Route::get('/blog', App\Livewire\Blog\BlogList::class)->name('blog.index');
+Route::get('/blog/{slug}', App\Livewire\Blog\BlogDetail::class)->name('blog.show');
 
 // Cart routes
 Route::get('/cart', App\Livewire\Cart\CartPage::class)->name('cart.index');
@@ -55,6 +71,9 @@ Route::middleware(['auth', 'role:seller,admin'])->prefix('seller')->group(functi
     Route::get('/products/{product}/edit', App\Livewire\Seller\ProductEdit::class)->name('seller.products.edit');
     Route::get('/withdrawals/create', App\Livewire\Seller\WithdrawalRequest::class)->name('seller.withdrawals.create');
     Route::get('/withdrawals', App\Livewire\Seller\WithdrawalHistory::class)->name('seller.withdrawals');
+    Route::get('/blog', App\Livewire\Seller\BlogManagement::class)->name('seller.blog.index');
+    Route::get('/blog/create', App\Livewire\Seller\BlogCreate::class)->name('seller.blog.create');
+    Route::get('/blog/{id}/edit', App\Livewire\Seller\BlogCreate::class)->name('seller.blog.edit');
 });
 
 // Admin routes
@@ -64,8 +83,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/seller-requests', App\Livewire\Admin\SellerRoleRequests::class)->name('admin.seller-requests');
     Route::get('/products', App\Livewire\Admin\ProductModeration::class)->name('admin.products');
     Route::get('/products/{product}/edit', App\Livewire\Admin\ProductEdit::class)->name('admin.products.edit');
+    Route::get('/categories', App\Livewire\Admin\CategoryManagement::class)->name('admin.categories');
     Route::get('/transactions', App\Livewire\Admin\TransactionList::class)->name('admin.transactions');
     Route::get('/withdrawals', App\Livewire\Admin\WithdrawalManagement::class)->name('admin.withdrawals');
+    Route::get('/reviews', App\Livewire\Admin\ReviewManagement::class)->name('admin.reviews');
+    Route::get('/blog', App\Livewire\Admin\BlogModeration::class)->name('admin.blog');
 });
 
 Route::view('dashboard', 'dashboard')

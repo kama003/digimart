@@ -218,6 +218,62 @@
             @enderror
         </div>
 
+        <!-- Preview File Upload (Optional) -->
+        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+            <div class="flex items-start">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3 flex-1">
+                    <h3 class="text-sm font-medium text-blue-800 dark:text-blue-200">Preview File (Recommended)</h3>
+                    <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                        <p>Upload a preview version of your product that customers can view before purchasing. This should be:</p>
+                        <ul class="list-disc list-inside mt-1 space-y-1">
+                            <li>Lower quality or watermarked for audio/video</li>
+                            <li>Limited duration (e.g., 30 seconds for audio, 1 minute for video)</li>
+                            <li>Low-resolution for images/graphics</li>
+                            <li>Sample pages for templates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label for="preview" class="block text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">
+                            Upload Preview File (Optional)
+                        </label>
+                        <input 
+                            type="file" 
+                            id="preview" 
+                            wire:model="preview"
+                            class="block w-full text-sm text-gray-500 dark:text-gray-400
+                                file:mr-4 file:py-2 file:px-4
+                                file:rounded-md file:border-0
+                                file:text-sm file:font-semibold
+                                file:bg-blue-50 file:text-blue-700
+                                hover:file:bg-blue-100
+                                dark:file:bg-blue-900 dark:file:text-blue-300"
+                        >
+                        <p class="mt-1 text-xs text-blue-600 dark:text-blue-400">Maximum file size: 50MB</p>
+                        
+                        @if ($preview)
+                            <div class="mt-2 text-sm text-blue-700 dark:text-blue-300">
+                                Selected: {{ $preview->getClientOriginalName() }} ({{ number_format($preview->getSize() / 1024 / 1024, 2) }} MB)
+                            </div>
+                        @endif
+                        
+                        <div wire:loading wire:target="preview" class="mt-2 text-sm text-blue-600 dark:text-blue-400">
+                            Uploading preview...
+                        </div>
+                        
+                        @error('preview')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Submit Button -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-3 sm:gap-4">
             <a 
@@ -229,7 +285,7 @@
             <button 
                 type="submit" 
                 wire:loading.attr="disabled"
-                wire:target="save, thumbnail, file"
+                wire:target="save, thumbnail, file, preview"
                 class="inline-flex justify-center items-center rounded-md border border-transparent bg-indigo-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 <span wire:loading.remove wire:target="save">Upload Product</span>

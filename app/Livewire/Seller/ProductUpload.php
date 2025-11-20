@@ -24,6 +24,7 @@ class ProductUpload extends Component
     public $license_type = '';
     public $thumbnail;
     public $file;
+    public $preview;
 
     protected function rules()
     {
@@ -37,6 +38,7 @@ class ProductUpload extends Component
             'license_type' => 'required|string|max:255',
             'thumbnail' => 'required|image|mimes:jpeg,jpg,png,webp|max:5120', // 5MB max
             'file' => 'required|file|max:512000', // 500MB max
+            'preview' => 'nullable|file|max:51200', // 50MB max for preview
         ];
     }
 
@@ -60,6 +62,7 @@ class ProductUpload extends Component
         'thumbnail.max' => 'Thumbnail size cannot exceed 5MB.',
         'file.required' => 'Please upload the product file.',
         'file.max' => 'File size cannot exceed 500MB.',
+        'preview.max' => 'Preview file size cannot exceed 50MB.',
     ];
 
     /**
@@ -121,6 +124,12 @@ class ProductUpload extends Component
             // Upload product file (private for security)
             $filePath = $storageService->uploadFile($this->file, 'products/files', 'private');
 
+            // Upload preview file (public but watermarked/limited)
+            $previewPath = null;
+            if ($this->preview) {
+                $previewPath = $storageService->uploadFile($this->preview, 'products/previews', 'public');
+            }
+
             // Get file size
             $fileSize = $this->file->getSize();
 
@@ -137,6 +146,7 @@ class ProductUpload extends Component
                 'license_type' => $this->license_type,
                 'thumbnail_path' => $thumbnailPath,
                 'file_path' => $filePath,
+                'preview_path' => $previewPath,
                 'file_size' => $fileSize,
                 'is_approved' => false,
                 'is_active' => true,

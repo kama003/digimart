@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto mb-5 py-12 px-4 sm:px-6 lg:px-8">
         {{-- Page Header --}}
-        <div class="mb-8">
+        <div class="mb-8 mt-8 pt-5">
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Shopping Cart</h1>
             <p class="mt-2 text-gray-600 dark:text-gray-400">
                 Review your items before checkout

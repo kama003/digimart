@@ -11,6 +11,7 @@ class ProductSearch extends Component
 {
     use WithPagination;
 
+    public $slug = ''; // Category slug from route parameter
     public $keyword = '';
     public $category_id = '';
     public $min_price = '';
@@ -19,7 +20,6 @@ class ProductSearch extends Component
 
     protected $queryString = [
         'keyword' => ['except' => ''],
-        'category_id' => ['except' => ''],
         'min_price' => ['except' => ''],
         'max_price' => ['except' => ''],
         'product_type' => ['except' => ''],
@@ -34,16 +34,62 @@ class ProductSearch extends Component
     }
 
     /**
+     * Mount the component
+     */
+    public function mount($slug = null)
+    {
+        $this->slug = $slug;
+        
+        // If slug is provided, find the category and set category_id
+        if ($this->slug) {
+            $category = Category::where('slug', $this->slug)->first();
+            if ($category) {
+                $this->category_id = $category->id;
+            }
+        }
+    }
+
+    /**
+     * Handle category change from dropdown
+     */
+    #[\Livewire\Attributes\On('category-changed')]
+    public function handleCategoryChange($slug)
+    {
+        if (empty($slug)) {
+            // Redirect to search page without category
+            return redirect()->route('products.search', [
+                'keyword' => $this->keyword,
+                'min_price' => $this->min_price,
+                'max_price' => $this->max_price,
+                'product_type' => $this->product_type,
+            ]);
+        } else {
+            // Redirect to category page
+            return redirect()->route('category.show', [
+                'slug' => $slug,
+                'keyword' => $this->keyword,
+                'min_price' => $this->min_price,
+                'max_price' => $this->max_price,
+                'product_type' => $this->product_type,
+            ]);
+        }
+    }
+
+    /**
      * Reset all filters
      */
     public function resetFilters()
     {
         $this->keyword = '';
-        $this->category_id = '';
         $this->min_price = '';
         $this->max_price = '';
         $this->product_type = '';
         $this->resetPage();
+        
+        // If on category page, redirect to search page
+        if ($this->slug) {
+            return redirect()->route('products.search');
+        }
     }
 
     /**
@@ -99,9 +145,18 @@ class ProductSearch extends Component
             return Category::orderBy('order')->orderBy('name')->get();
         });
 
+        // Get current category if slug is provided
+        $currentCategory = null;
+        if ($this->slug) {
+            $currentCategory = Category::where('slug', $this->slug)->first();
+        }
+
+        $title = $currentCategory ? $currentCategory->name : 'Search Products';
+
         return view('livewire.product.product-search', [
             'products' => $products,
             'categories' => $categories,
-        ])->layout('components.layouts.guest', ['title' => 'Search Products']);
+            'currentCategory' => $currentCategory,
+        ])->layout('components.layouts.guest', ['title' => $title]);
     }
 }

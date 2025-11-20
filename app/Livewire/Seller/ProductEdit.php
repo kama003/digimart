@@ -27,6 +27,7 @@ class ProductEdit extends Component
     public $license_type = '';
     public $thumbnail;
     public $file;
+    public $preview;
 
     public function mount(Product $product)
     {
@@ -57,6 +58,7 @@ class ProductEdit extends Component
             'license_type' => 'required|string|max:255',
             'thumbnail' => 'nullable|image|mimes:jpeg,jpg,png,webp|max:5120', // 5MB max
             'file' => 'nullable|file|max:512000', // 500MB max
+            'preview' => 'nullable|file|max:51200', // 50MB max for preview
         ];
     }
 
@@ -78,6 +80,7 @@ class ProductEdit extends Component
         'thumbnail.mimes' => 'Thumbnail must be a JPEG, JPG, PNG, or WebP file.',
         'thumbnail.max' => 'Thumbnail size cannot exceed 5MB.',
         'file.max' => 'File size cannot exceed 500MB.',
+        'preview.max' => 'Preview file size cannot exceed 50MB.',
     ];
 
     public function update()
@@ -122,6 +125,16 @@ class ProductEdit extends Component
                 $data['file_size'] = $this->file->getSize();
             }
 
+            // Upload new preview if provided
+            if ($this->preview) {
+                // Delete old preview
+                if ($this->product->preview_path) {
+                    $storageService->deleteFile($this->product->preview_path);
+                }
+                
+                $data['preview_path'] = $storageService->uploadFile($this->preview, 'products/previews', 'public');
+            }
+
             $this->product->update($data);
 
             \Illuminate\Support\Facades\Log::info('Product updated successfully', [
@@ -130,6 +143,7 @@ class ProductEdit extends Component
                 'title' => $this->title,
                 'thumbnail_updated' => $this->thumbnail !== null,
                 'file_updated' => $this->file !== null,
+                'preview_updated' => $this->preview !== null,
             ]);
 
             session()->flash('success', 'Product updated successfully.');

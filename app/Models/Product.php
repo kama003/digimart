@@ -25,6 +25,7 @@ class Product extends Model
         'license_type',
         'thumbnail_path',
         'file_path',
+        'preview_path',
         'file_size',
         'is_approved',
         'is_active',
@@ -99,5 +100,49 @@ class Product extends Model
     public function cartItems(): HasMany
     {
         return $this->hasMany(Cart::class);
+    }
+
+    /**
+     * Get the reviews for this product
+     */
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get approved reviews only
+     */
+    public function approvedReviews(): HasMany
+    {
+        return $this->hasMany(Review::class)->where('is_approved', true);
+    }
+
+    /**
+     * Get the average rating for this product
+     */
+    public function averageRating(): float
+    {
+        return $this->approvedReviews()->avg('rating') ?? 0;
+    }
+
+    /**
+     * Get the total number of reviews
+     */
+    public function reviewsCount(): int
+    {
+        return $this->approvedReviews()->count();
+    }
+
+    /**
+     * Get rating distribution
+     */
+    public function ratingDistribution(): array
+    {
+        $distribution = [];
+        for ($i = 5; $i >= 1; $i--) {
+            $distribution[$i] = $this->approvedReviews()->where('rating', $i)->count();
+        }
+        return $distribution;
     }
 }
